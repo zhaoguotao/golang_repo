@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	//	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -37,6 +38,14 @@ func FirstPage() ui.Control {
 		entry.SetText(filename)
 	})
 	MultiEntry = ui.NewNonWrappingMultilineEntry()
+	buttonOpenFolder := ui.NewButton(" 打开目录   ")
+	buttonOpenFolder.OnClicked(func(*ui.Button) {
+		cmd := exec.Command("cmd", "/c", "start .")
+		if err := cmd.Run(); err != nil {
+			MultiEntry.Append("Error: " + err.Error() + "\n")
+			return
+		}
+	})
 	buttonRun := ui.NewButton("    Run    ")
 	buttonRun.OnClicked(func(*ui.Button) {
 		fin := entry.Text()
@@ -66,8 +75,9 @@ func FirstPage() ui.Control {
 	})
 	grid.Append(button, 0, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
 	grid.Append(entry, 1, 0, 1, 1, true, ui.AlignFill, false, ui.AlignFill)
-	grid.Append(buttonRun, 2, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
-	grid.Append(buttonClear, 3, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
+	grid.Append(buttonOpenFolder, 2, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
+	grid.Append(buttonRun, 3, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
+	grid.Append(buttonClear, 4, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
 
 	entryForm := ui.NewForm()
 	entryForm.SetPadded(true)
@@ -101,7 +111,6 @@ func RenameFile(fname, new_name string) {
 	ret := os.Rename(fname, new_name)
 	if ret != nil {
 		MultiEntry.Append(ret.Error())
-		fmt.Println(ret)
 		return
 	} else {
 		MultiEntry.Append(fname + " >>> " + new_name + "\n")

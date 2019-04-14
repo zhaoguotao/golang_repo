@@ -5,6 +5,7 @@
 package main
 
 import (
+	//	"fmt"
 	"log"
 	"path"
 	"strings"
@@ -60,6 +61,7 @@ func main() {
 	}.Run()); err != nil {
 		log.Fatal(err)
 	}
+	//	fmt.Println(Items)
 }
 
 type MyMainWindow struct {
